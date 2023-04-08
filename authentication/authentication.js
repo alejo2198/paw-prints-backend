@@ -1,0 +1,19 @@
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+    
+    const token = req.headers.bearer
+    
+    if(!token){
+        return res.sendStatus(401).json({message:"no token was found"})
+    } else{
+        jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(error,username)=>{
+            if(error){
+                return res.sendStatus(403).json({message:"token found but it expired or incorrect"})
+            }else{
+                req.user = username;
+                next();
+            }
+        })
+    }
+};

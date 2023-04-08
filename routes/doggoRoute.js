@@ -1,13 +1,18 @@
 const router = require('express').Router();
 const doggoController = require('../controllers/doggoController');
+const authentication = require('../authentication/authentication');
 
 
 router
     .route('/')
-    .post(doggoController.createDoggo);
+    .get(authentication,doggoController.getDoggoById)
+    .post(authentication,doggoController.createDoggo);
+   
 
 router
-    .route('/:doggo-id')
-    .get(doggoController.getDoggoById)
+    .route('/metrics')
+    .get(authentication,doggoController.getMetrics)
+    .put(authentication,doggoController.incrementMetric)
+   
    
 module.exports = router;
