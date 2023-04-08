@@ -21,7 +21,7 @@ const doggoRoute = require('./routes/doggoRoute');
 app.use('/doggo', doggoRoute);
 
 const postRoute = require('./routes/postRoute');
-app.use('/post', postRoute);
+app.use('/pawpost', postRoute);
 
 
 app.listen(PORT, () => {

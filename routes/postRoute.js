@@ -1,16 +1,16 @@
 const router = require('express').Router();
 const postController = require('../controllers/postController');
-
+const authentication = require('../authentication/authentication');
 
 router
-    .route('/:doggo-id')
-    .get(postController.getPosts)
-    .post(postController.createPost);
+    .route('/')
+    .get(authentication,postController.getPosts)
+    .post(authentication,postController.createPost);
    
 router
-    .route('/:post-id')
-    .get(postController.getPostById)
-    .put(postController.editPost)
-    .delete(postController.deletePost);
+    .route('/:id')
+    .get(authentication,postController.getPostById)
+    .put(authentication,postController.editPost)
+    .delete(authentication,postController.deletePost);
 
 module.exports = router;
