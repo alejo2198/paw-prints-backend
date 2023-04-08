@@ -32,29 +32,29 @@ exports.createDoggo = (req,res) =>{
     
     
 }
-exports.getDoggoById = (req,res) =>{
-    knex('doggos')
-    .where({user_id:req.user})
-    .then(data=>{
-      if(data.length !== 0){
-        const doggo = data[0];
-        res.json(doggo)
-      } else{
-        res.status(400).send('entered wrong id')
-      }
-    })
-    .catch(error=>{
-      res.status(400).send('error retreiving doggo by id')
-    })
-     
-}
+exports.getDoggoById = async (req,res) =>{
+   try{
+    const  doggo = await getDogFromUser(req.user)
+    console.log(doggo)
+    if (doggo){
+      res.status(200).json(doggo)
+    }else{
+      res.status(400).send('entered wrong id')
+    }
+   } catch (error){
+      res.status(500).send(`server failed to attempt retreiving doggo ${error}`)
+   }
+    
+ }
+    
 
-exports.getMetrics = (req,res) =>{
-    knex('doggos')
-    .where({user_id:req.user})
-    .then(data=>{
-      if(data.length !== 0){
-        const doggo_id = data[0].id;
+
+exports.getMetrics = async (req,res) =>{
+  try{
+    const  doggo = await getDogFromUser(req.user)
+    console.log(doggo)
+    if (doggo){
+      const doggo_id = doggo.id;
         knex('metrics')
         .where({doggo_id:doggo_id})
         .then(data=>{
@@ -66,17 +66,52 @@ exports.getMetrics = (req,res) =>{
         .catch(error =>{
           res.status(400).send('error retrieving metrics')
         })
-        
-      } else{
-        res.status(400).send('entered wrong id')
-      }
-    })
-    .catch(error=>{
-      res.status(400).send('error retrieving doggo by id')
-    })
-     
+    }else{
+      res.status(400).send('entered wrong id')
+    }
+   } catch (error){
+      res.status(500).send(`server failed to attempt retreiving doggo ${error}`)
+   }
+   
 }
-exports.incrementMetric = (req,res) =>{
-    
-     
+exports.incrementMetric = async  (req,res) =>{
+  try{
+    const  doggo = await getDogFromUser(req.user)
+    console.log(doggo)
+    if (doggo){
+      const metric=req.body.metric
+      const doggo_id = doggo.id;
+      knex('metrics')
+        .where({doggo_id:doggo_id})
+        .increment(metric,1)
+        .then(()=>{
+          res.status(200).send(`${metric} was updated successfully`)
+        })
+        .catch(error =>{
+          res.status(400).send('metric does not exist')
+        })
+    }else{
+      res.status(400).send('entered wrong id')
+    }
+   } catch (error){
+      res.status(500).send(`server failed to attempt retrieving doggo ${error}`)
+   }
+
+ 
+}
+
+//Helper function
+async function  getDogFromUser(userId){
+  try{
+    const data = await knex('doggos').where({user_id:userId})
+    if(data.length !== 0){
+      const doggo = data[0];
+      return doggo
+    } else{
+      return false
+    }
+  } catch(error) {
+    return false
+  }
+  
 }
