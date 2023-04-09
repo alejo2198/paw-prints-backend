@@ -28,7 +28,7 @@ exports.createDoggo = (req,res) =>{
           .catch((error) => res.status(400).send(`Error creating Doggo: ${error}`));
           res.status(201).json(newDoggo);
         })
-    .catch((error) => res.status(400).send(`Error creating Doggo: ${error}`));
+        .catch((error) => res.status(400).send(`Error creating Doggo: ${error}`));
     
     
 }
