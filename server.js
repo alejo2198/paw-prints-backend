@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-
+const upload = require('express-fileupload')
 require('dotenv').config();
 const PORT = process.env.PORT || 8081
 
@@ -9,7 +9,7 @@ const { CORS_ORIGIN } = process.env;
 
 app.use(express.json())
 app.use(express.static('public'))
-
+app.use(upload())
 app.use(cors({origin: CORS_ORIGIN}));
 //
 //remove cors origin if you want to check the api on thunderclient or postman (Reviewer note)

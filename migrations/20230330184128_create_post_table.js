@@ -10,6 +10,7 @@ exports.up = function(knex) {
         table.string('story').notNullable();
         table.string('image').notNullable();
         table.string('emoticon').notNullable();
+        table.integer('timestamp').notNullable();
 
       });
     };
